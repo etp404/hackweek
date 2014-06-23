@@ -2,7 +2,6 @@ import cv2
 import numpy
 
 img = cv2.imread('resources/many_faces.jpg')
-cv2.imshow('img', img)
 
 face_cascade = cv2.CascadeClassifier("resources/haarcascade_frontalface_default.xml")
 
@@ -14,7 +13,6 @@ faceMap = numpy.zeros((height, width,1), numpy.uint8)
 for (x,y,w,h) in faces:
     cv2.rectangle(faceMap,(x,y),(x+w,y+h),255,-1)
 
-cv2.waitKey(2000)
 cv2.imshow('facemap', faceMap)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
