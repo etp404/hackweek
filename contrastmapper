@@ -1,0 +1,39 @@
+import cv2
+import numpy
+
+def filterByGaborAtFourOrientations(img, lambd):
+    height, width = img.shape
+    result = numpy.zeros((height, width), numpy.uint8)
+    for theta in [0, 45, 90, 135]:
+        filtered = filterByGabor(img, lambd, theta)
+        result = cv2.add(result, filtered)
+    return result;
+
+
+def filterByGabor(img, lambd, theta):
+    sigma = lambd
+    ksize = 3*sigma
+    gamma = 1;
+    gabor = cv2.getGaborKernel((ksize,ksize), sigma, theta, lambd, gamma)
+    return cv2.filter2D(img, cv2.CV_8U, gabor)
+
+
+inputImage = cv2.imread('resources/many_faces.jpg')
+
+face_cascade = cv2.CascadeClassifier("resources/haarcascade_frontalface_default.xml")
+
+grayImage = cv2.cvtColor(inputImage, cv2.COLOR_BGR2GRAY)
+
+height, width = grayImage.shape
+
+grayImageFloat = grayImage.astype(float);
+
+# cv2.imshow('result', convertedTypeImage)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
+
+filterResult = filterByGaborAtFourOrientations(grayImage, 10)
+
+cv2.imshow('result', filterResult)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
