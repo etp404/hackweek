@@ -1,12 +1,6 @@
 import cv2
 import numpy
 
-face_cascade = cv2.CascadeClassifier("resources/haarcascade_frontalface_default.xml")
-img = cv2.imread('resources/tennis.jpg')
-
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-
 def get_intensity(event,x,y,flags,image):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(x)
@@ -25,10 +19,16 @@ def create_breadcrumb_map(faces, height, width):
     breadcrumb /= numpy.max(breadcrumb)
     return breadcrumb
 
-height, width, depth = img.shape
-breadcrumb = create_breadcrumb_map(faces, height, width)
+def get_breadcrumb_map_to_faces(imageLocation):
+    img = cv2.cvtColor(cv2.imread(imageLocation), cv2.COLOR_BGR2GRAY)
+    face_cascade = cv2.CascadeClassifier("resources/haarcascade_frontalface_default.xml")
+    faces = face_cascade.detectMultiScale(img, 1.3, 5)
+    height, width = img.shape
+    return create_breadcrumb_map(faces, height, width)
 
+breadcrumb = get_breadcrumb_map_to_faces('resources/tennis.jpg')
 cv2.imshow('breadcrumb', breadcrumb)
 cv2.setMouseCallback('breadcrumb',get_intensity, breadcrumb)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
