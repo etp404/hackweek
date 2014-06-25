@@ -1,7 +1,7 @@
 import cv2
 import numpy
 
-def get_intensity(event,x,y,flags,image):
+def get_intensity_callback(event,x,y,flags,image):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(x)
         print(y)
@@ -15,7 +15,7 @@ def create_breadcrumb_map(faces, height, width):
         x_centre = x+w/2
         y_centre = y+h/2
         breadcrumb -= numpy.sqrt(((x_centre-breadcrumbx)**2 + (y_centre-breadcrumby)**2).astype(float))
-    breadcrumb = breadcrumb - numpy.min(breadcrumb)
+    breadcrumb -= numpy.min(breadcrumb)
     breadcrumb /= numpy.max(breadcrumb)
     return breadcrumb
 
@@ -28,7 +28,7 @@ def get_breadcrumb_map_to_faces(imageLocation):
 
 breadcrumb = get_breadcrumb_map_to_faces('resources/tennis.jpg')
 cv2.imshow('breadcrumb', breadcrumb)
-cv2.setMouseCallback('breadcrumb',get_intensity, breadcrumb)
+cv2.setMouseCallback('breadcrumb', get_intensity_callback, breadcrumb)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
